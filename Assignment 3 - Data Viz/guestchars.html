@@ -1,0 +1,113 @@
+
+
+
+
+<!doctype html>
+<html>
+
+<head>
+<title>Assignment 3</title>
+
+<script type="text/javascript" src="http://www.recursion.org/d3-for-mere-mortals/d3.js"></script>
+<script type="text/javascript" src="http://www.recursion.org/d3-for-mere-mortals/d3.time.js"></script>
+<script type="text/javascript" src="http://www.recursion.org/d3-for-mere-mortals/jquery-1.6.2.min.js"></script>
+<script src="http://mbostock.github.com/d3/d3.v2.min.js"></script>
+
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<style type="text/css">
+body {
+  width: 850px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+</style>
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Who Gets A Reply?</h1>
+
+<p> Understanding What Guest Characteristics Are Important </p>
+
+<div id="bar-demo"></div>
+
+<script type="text/javascript">
+
+var data= [{bar: "all", probability: 30},
+            {bar: "this_user", probability: 30}];
+
+var male = -10;
+
+var barWidth = 40;
+var width = (barWidth + 10) * data.length;
+var height = 220;
+
+var x = d3.scale.linear().domain([0, data.length]).range([0, width]);
+var y = d3.scale.linear().domain([0, d3.max(data, function(d,i) {  
+						if (i == 0)	{ 
+							return d.probability + 20; 
+						}
+						else { 
+							return d.probability; 
+						}	
+						})]).
+rangeRound([0, height - 20]);
+
+var padding = 30;
+var barDemo = d3.select("#bar-demo").
+  append("svg:svg").
+  attr("width", width).
+  attr("height", height + padding);
+
+path = barDemo.selectAll("rect").
+  data(data).
+  enter().
+  append("svg:rect").
+  attr("x", function(d, index) { return x(index); }).
+  attr("y", function(d) { return height - y(d.probability); }).
+  attr("height", function(d) { return y(d.probability); }).
+  attr("width", barWidth).
+  attr("fill", "#f17fbb");
+  
+labels = barDemo.selectAll("text").
+  data(data).
+  enter().append("svg:text").
+  attr("x", function(d, index) { return x(index) + barWidth; }).
+  attr("y", function(d) { return height - y(d.probability) - 20; }).
+  attr("dx", -barWidth/2).
+  attr("dy", "1.2em").
+  attr("text-anchor", "middle").
+  attr("style", "font-size: 12; font-family: Helvetica, sans-serif;").
+  text(function(d) { return d.probability;}).
+  attr("fill", "#48afdd");
+
+d3.selectAll("input").on("change", change);
+
+function change() {
+  path = path.data(data[this.value]); // update the data
+  labels = labels.data(data[this.value]);
+  attr("x", function(d, index) { return x(index); }).
+  attr("y", function(d) { return height - y(d.probability); }).
+  attr("height", function(d) { return y(d.probability); }).
+  attr("width", barWidth);
+}
+  
+
+</script>
+
+<p> What happens if this user is: </p>
+<form>
+  <label><input type="checkbox" name="data" value="male"> Male</label>
+  <label><input type="checkbox" name="data" value="under_30"> Under 30</label>
+</form>
+
+</body>
+</html>
+
