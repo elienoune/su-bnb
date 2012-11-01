@@ -41,7 +41,8 @@ body {
 <script type="text/javascript">
 
 var data= [{bar: "all", probability: 30},
-            {bar: "this_user", probability: 30}];
+            {bar: "this_user", probability: 30}, 
+            {bar: "test", probability: 20}];
 
 var male = -10;
 
@@ -88,9 +89,11 @@ labels = barDemo.selectAll("text").
   text(function(d) { return d.probability;}).
   attr("fill", "#48afdd");
 
-d3.selectAll("input").on("change", change);
+// BUG FOUND: the change function is not being called, something wrong with the event handling.
+d3.selectAll("input").on("click", change);
 
 function change() {
+  console.log("in change function"); // being called after adding onchange event to <input>
   path = path.data(data[this.value]); // update the data
   labels = labels.data(data[this.value]);
   attr("x", function(d, index) { return x(index); }).
@@ -98,14 +101,18 @@ function change() {
   attr("height", function(d) { return y(d.probability); }).
   attr("width", barWidth);
 }
+
+
+
+
   
 
 </script>
 
 <p> What happens if this user is: </p>
 <form>
-  <label><input type="checkbox" name="data" value="male"> Male</label>
-  <label><input type="checkbox" name="data" value="under_30"> Under 30</label>
+  <label><input type="checkbox" name="data" value="male" onchange="change()"> Male</label>
+  <label><input type="checkbox" name="data" value="under_30" onchange="change()"> Under 30</label>
 </form>
 
 </body>
