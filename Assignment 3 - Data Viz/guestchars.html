@@ -40,6 +40,15 @@ body {
 
 <script type="text/javascript">
 
+// model functions
+var num_variables = 9;
+var regression_coeffs = [-0.69, 0.13, 0.16, 0.09, -0.28, 0.29, -0.95, -0.06, -0.10, -0.12];
+// array of booleans to select variables in and out of the model.
+var selected_variables = [1, 1, 1, 0, 0, 0, 0, 0, 0];
+var input_variables = ["same_gender", "same_age", "had_prior_review", 
+											"had_bad_review", "had_phone_verified", "has_concurrent_request",
+											"guest_is_male", "short_about_me", "short_message"];
+
 var data= [{bar: "all", probability: 30},
             {bar: "this_user", probability: 30}, 
             {bar: "test", probability: 20}];
@@ -94,6 +103,8 @@ d3.selectAll("input").on("click", change);
 
 function change() {
   console.log("in change function"); // being called after adding onchange event to <input>
+  var output_probability = computeProbability(); 
+  console.log(output_probability); // being called after adding onchange event to <input>
   path = path.data(data[this.value]); // update the data
   labels = labels.data(data[this.value]);
   attr("x", function(d, index) { return x(index); }).
@@ -102,7 +113,14 @@ function change() {
   attr("width", barWidth);
 }
 
-
+function computeProbability() {
+	var output = 0;
+	for (var i=0; i < num_variables; i++) {
+			output += selected_variables[i] * regression_coeffs[i];
+	}
+	output = 1.0/(1.0 + Math.exp(-output));
+	return output;
+}
 
 
   
