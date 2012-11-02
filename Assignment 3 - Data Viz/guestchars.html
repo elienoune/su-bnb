@@ -145,7 +145,7 @@ function change(element) {
   labels = labels.data(data).
   attr("height", function(d) { return y(d.probability); }).
   attr("x", function(d, index) { return x(index) + barWidth; }).
-  text(function(d) { return d.probability;});
+  text(function(d) { return d.probability + "%";});
   
    labels.transition().duration(750).attr("y", function(d) { return height - y(d.probability) - 20; }); 
     
