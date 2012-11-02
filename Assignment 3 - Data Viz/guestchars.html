@@ -61,7 +61,7 @@ var data= [{bar: "worst case", probability: worst_probability},
 var male = -10;
 
 var barWidth = 40;
-var width = (barWidth + 10) * data.length;
+var width = (barWidth + 40) * data.length;
 var height = 220;
 
 var x = d3.scale.linear().domain([0, data.length]).range([0, width]);
@@ -96,6 +96,20 @@ labels = barDemo.selectAll("text").
   attr("style", "font-size: 12; font-family: Helvetica, sans-serif;").
   text(function(d) { return d.probability;}).
   attr("fill", "#4b0082");
+
+barDemo.selectAll("text.xAxis").
+  data(data).
+  enter().append("svg:text").
+  attr("x", function(d, index) { return x(index) + barWidth; }).
+  attr("y", height).
+  attr("dx", -barWidth/2 + 9).
+  attr("text-anchor", "middle").
+  attr("style", "font-size: 12; font-family: Helvetica, sans-serif").
+  text(function(d) { return d.bar;}).
+  attr("transform", "translate(0, 18)").
+  attr("class", "xAxis");
+
+
 
 // BUG FOUND: the change function is not being called, something wrong with the event handling.
 //d3.selectAll("input").on("click", change);
