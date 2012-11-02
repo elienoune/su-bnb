@@ -78,6 +78,7 @@ var barDemo = d3.select("#bar-demo").
   attr("width", width).
   attr("height", height + padding);
 
+/*
 line = barDemo.append("svg:line")
 		.attr("x1", 0)
     .attr("y1", 0.45*220)
@@ -87,6 +88,7 @@ line = barDemo.append("svg:line")
 
 // Make the line a little transparent (decrease opacity)
 line.style("stroke-opacity", 0.6);
+*/
 
 path = barDemo.selectAll("rect").
   data(data).
