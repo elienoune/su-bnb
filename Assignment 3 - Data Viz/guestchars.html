@@ -1,4 +1,3 @@
-// test commit
 
 
 
@@ -66,14 +65,7 @@ var width = (barWidth + 10) * data.length;
 var height = 220;
 
 var x = d3.scale.linear().domain([0, data.length]).range([0, width]);
-var y = d3.scale.linear().domain([0, d3.max(data, function(d,i) {  
-						if (i == 0)	{ 
-							return d.probability + 20; 
-						}
-						else { 
-							return d.probability; 
-						}	
-						})]).
+var y = d3.scale.linear().domain([0, d3.max(data, function(d,i) { 	return d.probability; })]).
 rangeRound([0, height - 20]);
 
 var padding = 30;
@@ -123,25 +115,16 @@ function change(element) {
   // update the data
   path = path.data(data).
 	attr("x", function(d, index) { return x(index); }).
-  attr("y", function(d) { return height - y(d.probability); }).
-  attr("height", function(d) { return y(d.probability); }).
   attr("width", barWidth);
-  
-  // transition attempt, not working
-  /*
-  path.
-  attr("height", function(d) { return y(d.probability); }).
-  transition().
-  duration(750).
-  delay(function(d, i) { return i * 10; });
-  */
+
+   path.transition().duration(750).attr("height", function(d) { return y(d.probability); }).attr("y", function(d) { return height - y(d.probability); }). 
   
   labels = labels.data(data).
+  attr("height", function(d) { return y(d.probability); }).
   attr("x", function(d, index) { return x(index) + barWidth; }).
-  attr("y", function(d) { return height - y(d.probability) - 20; }).
   text(function(d) { return d.probability;});
   
-  
+   labels.transition().duration(750).attr("y", function(d) { return height - y(d.probability) - 20; }); 
     
 
 }
