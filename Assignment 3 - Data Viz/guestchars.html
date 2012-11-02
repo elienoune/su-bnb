@@ -50,9 +50,13 @@ var input_variables = ["same_gender", "same_age", "had_prior_review",
 											"guest_is_male", "short_about_me", "short_message"];
 var initial_probability = computeProbability();
 console.log(initial_probability);
-var data= [{bar: "case 1", probability: initial_probability},
-            {bar: "case 2", probability: 10}, 
-            {bar: "case 3", probability: 20}];
+
+var worst_probability = computeProbability("worst");
+var best_probability = computeProbability("best");
+
+var data= [{bar: "worst case", probability: worst_probability},
+            {bar: "test case", probability: initial_probability}, 
+            {bar: "best case", probability: best_probability}];
 
 var male = -10;
 
@@ -111,7 +115,7 @@ function change(element) {
   var output_probability = computeProbability(); 
   console.log(output_probability); // being called after adding onchange event to <input>
   	console.log(data);
-	data[0].probability = output_probability;
+	data[1].probability = output_probability;
 	console.log(data);
   //path = path.data(data[element.id]); // update the data
   //labels = labels.data(data[element.id]);
@@ -128,18 +132,24 @@ function change(element) {
   text(function(d) { return d.probability;});
 }
 
-function computeProbability() {
+function computeProbability(option) {
 	var output = regression_coeffs[0];
 	for (var i=0; i < num_variables; i++) {
-			output += selected_variables[i] * regression_coeffs[i+1];
+	    var selected = selected_variables[i];
+	    var coeff = regression_coeffs[i+1];
+			if (option == "worst" && coeff < 0) {
+					output+= coeff; 
+					} else if (option == "best" && coeff > 0) {
+					output+= coeff;
+					} else if (!option) {
+					output += selected * coeff;
+					}
 	}
 	output = 1.0/(1.0 + Math.exp(-output));
 	output = output *100;
 	output = Math.round(output);
 	return output;
 }
-
-
   
 
 </script>
