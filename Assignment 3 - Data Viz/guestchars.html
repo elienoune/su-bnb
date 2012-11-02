@@ -48,10 +48,11 @@ var selected_variables = [1, 1, 1, 0, 0, 0, 0, 0, 0];
 var input_variables = ["same_gender", "same_age", "had_prior_review", 
 											"had_bad_review", "had_phone_verified", "has_concurrent_request",
 											"guest_is_male", "short_about_me", "short_message"];
-
-var data= [{bar: "all", probability: 30},
-            {bar: "this_user", probability: 30}, 
-            {bar: "test", probability: 20}];
+var initial_probability = computeProbability();
+console.log(initial_probability);
+var data= [{bar: "case 1", probability: initial_probability},
+            {bar: "case 2", probability: 10}, 
+            {bar: "case 3", probability: 20}];
 
 var male = -10;
 
@@ -71,6 +72,7 @@ var y = d3.scale.linear().domain([0, d3.max(data, function(d,i) {
 rangeRound([0, height - 20]);
 
 var padding = 30;
+// "bar-demo" is the id of an empty div, (Gosh, I hate web programming and the DOM)
 var barDemo = d3.select("#bar-demo").
   append("svg:svg").
   attr("width", width).
@@ -84,7 +86,7 @@ path = barDemo.selectAll("rect").
   attr("y", function(d) { return height - y(d.probability); }).
   attr("height", function(d) { return y(d.probability); }).
   attr("width", barWidth).
-  attr("fill", "#f17fbb");
+  attr("fill", "#1e90ff");
   
 labels = barDemo.selectAll("text").
   data(data).
@@ -96,21 +98,34 @@ labels = barDemo.selectAll("text").
   attr("text-anchor", "middle").
   attr("style", "font-size: 12; font-family: Helvetica, sans-serif;").
   text(function(d) { return d.probability;}).
-  attr("fill", "#48afdd");
+  attr("fill", "#4b0082");
 
 // BUG FOUND: the change function is not being called, something wrong with the event handling.
-d3.selectAll("input").on("click", change);
+//d3.selectAll("input").on("click", change);
 
-function change() {
-  console.log("in change function"); // being called after adding onchange event to <input>
+function change(element) {
+  //console.log("in change function"); // being called after adding onchange event to <input>
+  //console.log(element.id);
+  //console.log(selected_variables[element.id]);
+  selected_variables[element.id] = (selected_variables[element.id]+ 1) %2;
   var output_probability = computeProbability(); 
   console.log(output_probability); // being called after adding onchange event to <input>
-  path = path.data(data[this.value]); // update the data
-  labels = labels.data(data[this.value]);
-  attr("x", function(d, index) { return x(index); }).
+  	console.log(data);
+	data[element.id].probability = output_probability;
+	console.log(data);
+  //path = path.data(data[element.id]); // update the data
+  //labels = labels.data(data[element.id]);
+  // update the data
+  path = path.data(data).
+	attr("x", function(d, index) { return x(index); }).
   attr("y", function(d) { return height - y(d.probability); }).
   attr("height", function(d) { return y(d.probability); }).
   attr("width", barWidth);
+  
+  labels = labels.data(data).
+  attr("x", function(d, index) { return x(index) + barWidth; }).
+  attr("y", function(d) { return height - y(d.probability) - 20; }).
+  text(function(d) { return d.probability;});
 }
 
 function computeProbability() {
@@ -119,6 +134,8 @@ function computeProbability() {
 			output += selected_variables[i] * regression_coeffs[i];
 	}
 	output = 1.0/(1.0 + Math.exp(-output));
+	output = output *100;
+	output = Math.round(output);
 	return output;
 }
 
@@ -129,8 +146,9 @@ function computeProbability() {
 
 <p> What happens if this user is: </p>
 <form>
-  <label><input type="checkbox" name="data" value="male" onchange="change()"> Male</label>
-  <label><input type="checkbox" name="data" value="under_30" onchange="change()"> Under 30</label>
+  <label><input id=0 type="checkbox" name="0" value="same_gender" onchange="change(this)"> Same Gender</label>
+  <label><input id=1 type="checkbox" name="data" value="same_age" onchange="change(this)"> Same Age category</label>
+  <label><input id=2 type="checkbox" name="data" value="had_prior_review" onchange="change(this)"> Had Prior Review</label>
 </form>
 
 </body>
