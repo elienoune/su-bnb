@@ -45,6 +45,7 @@ var num_variables = 9;
 var regression_coeffs = [-0.69, 0.13, 0.16, 0.09, -0.28, 0.29, -0.95, -0.06, -0.10, -0.12];
 // array of booleans to select variables in and out of the model.
 var selected_variables = [1, 1, 1, 0, 0, 0, 0, 0, 0];
+var average_acceptance = 30; // in %
 var input_variables = ["same_gender", "same_age", "had_prior_review", 
 											"had_bad_review", "had_phone_verified", "has_concurrent_request",
 											"guest_is_male", "short_about_me", "short_message"];
@@ -126,10 +127,23 @@ function change(element) {
   attr("height", function(d) { return y(d.probability); }).
   attr("width", barWidth);
   
+  // transition attempt, not working
+  /*
+  path.
+  attr("height", function(d) { return y(d.probability); }).
+  transition().
+  duration(750).
+  delay(function(d, i) { return i * 10; });
+  */
+  
   labels = labels.data(data).
   attr("x", function(d, index) { return x(index) + barWidth; }).
   attr("y", function(d) { return height - y(d.probability) - 20; }).
   text(function(d) { return d.probability;});
+  
+  
+    
+
 }
 
 function computeProbability(option) {
