@@ -61,8 +61,8 @@ var data= [{bar: "worst case", probability: worst_probability},
 var male = -10;
 
 var barWidth = 40;
-var width = (barWidth + 40) * data.length;
-var height = 220;
+var width = (barWidth + 40) * data.length *2;
+var height = 2*220;
 
 var x = d3.scale.linear().domain([0, data.length]).range([0, width]);
 var y = d3.scale.linear().domain([0, d3.max(data, function(d,i) { 	return d.probability; })]).
