@@ -31,11 +31,11 @@ body {
 
 <body>
 
-<div><img src="http://s3.amazonaws.com/thebolditalic.com/clip_additional_images/470/images/scrollable/airbnb-logo.jpg?1315439773" alt="Airbnb" height="100" width="200"></div>
+<div><img src="http://s3.amazonaws.com/thebolditalic.com/clip_additional_images/470/images/scrollable/airbnb-logo.jpg?1315439773" alt="Airbnb" height="75" width="150"></div>
 <h1>
 Please say yes!
 </h1>
-<p> Learn how you can increase your chances of being accepted by an Airbnb host</p>
+<p> Learn how you can increase your chances of being accepted by an Airbnb host.</p>
 
 <div id="bar-demo"></div>
 
@@ -64,7 +64,7 @@ var male = -10;
 
 var barWidth = 40;
 var width = (barWidth + 40) * data.length *2;
-var height = 2*220;
+var height = 220;
 
 var x = d3.scale.linear().domain([0, data.length]).range([0, width]);
 var y = d3.scale.linear().domain([0, d3.max(data, function(d,i) { 	return d.probability; })]).
@@ -85,7 +85,14 @@ path = barDemo.selectAll("rect").
   attr("y", function(d) { return height - y(d.probability); }).
   attr("height", function(d) { return y(d.probability); }).
   attr("width", barWidth).
-  attr("fill", "#1e90ff");
+  attr("fill", function(d) { 
+				  if (d.bar == "worst case" | d.bar == "best case") {
+				  return "#f17fbb";
+				  } else if (d.bar == "test case") {
+					return "#48afdd"
+				  } 
+				  });
+
   
 labels = barDemo.selectAll("text").
   data(data).
@@ -96,7 +103,7 @@ labels = barDemo.selectAll("text").
   attr("dy", "1.2em").
   attr("text-anchor", "middle").
   attr("style", "font-size: 12; font-family: Helvetica, sans-serif;").
-  text(function(d) { return d.probability;}).
+  text(function(d) { return d.probability + "%";}).
   attr("fill", "#4b0082");
 
 barDemo.selectAll("text.xAxis").
